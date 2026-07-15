@@ -2,6 +2,7 @@
   "name": "@wyrd-company/async-claude-agentsdk-mcp",
   "version": "0.1.0",
   "description": "Asynchronous MCP server for running Claude Agent SDK sessions",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "async-claude-agentsdk-mcp": "dist/src/cli.js"
@@ -16,15 +17,22 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepack": "npm run build",
+    "start": "node dist/src/cli.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "keywords": [
+    "agent-sdk",
+    "async",
+    "claude",
+    "mcp",
+    "model-context-protocol"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wyrd-company/async-claude-agentsdk-mcp.git"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "engines": {

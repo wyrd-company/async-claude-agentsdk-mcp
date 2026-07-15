@@ -71,29 +71,45 @@ export ASYNC_CLAUDE_MCP_PERMISSION_MODE=default
 
 Accepted values are `default`, `acceptEdits`, `bypassPermissions`, `plan`, `dontAsk`, and `auto`.
 
-## Install and run
+## Run
+
+Run the latest published version without installing it globally:
 
 ```bash
-npm install
-npm run build
-node dist/src/cli.js
+npx --yes @wyrd-company/async-claude-agentsdk-mcp
 ```
 
 Example Codex configuration:
 
 ```toml
 [mcp_servers.async_claude]
-command = "node"
-args = ["/absolute/path/to/async-claude-agentsdk-mcp/dist/src/cli.js"]
+command = "npx"
+args = ["--yes", "--@wyrd-company:registry=https://registry.npmjs.org", "@wyrd-company/async-claude-agentsdk-mcp"]
 ```
 
 The server uses stdio and writes protocol messages only to stdout. Claude Agent SDK authentication and settings are inherited from the server process environment.
 
+The explicit scope registry in the Codex configuration ensures npmjs is used even when the local npm configuration routes `@wyrd-company` packages to another registry.
+
+For a global installation instead, run `npm install --global @wyrd-company/async-claude-agentsdk-mcp` and use `async-claude-agentsdk-mcp` as the command.
+
 Session records are in memory. They survive multiple MCP tool calls and Claude turns while the stdio server remains running, but they do not survive a server restart.
+
+## Publishing
+
+The package is published publicly to npmjs and GitHub Packages as `@wyrd-company/async-claude-agentsdk-mcp`. The `Publish Package` GitHub Actions workflow validates the release, publishes to npmjs with provenance using the repository's `NPM_TOKEN` Actions secret, and then publishes to GitHub Packages using its `GITHUB_TOKEN`.
+
+Run the workflow manually, or push a bare SemVer tag that exactly matches the version in `package.json`, for example `0.1.0`. Tags prefixed with `v` do not trigger publishing.
+
+The GitHub Packages release inherits the public repository's visibility and permissions. Publishing npmjs first lets a failed GitHub Packages job be retried without attempting the immutable npmjs version again.
+
+After the first release creates the npmjs package, configure npm trusted publishing for `publish-package.yml` and remove `NODE_AUTH_TOKEN` from the npmjs job to eliminate the long-lived publishing token.
 
 ## Development
 
 ```bash
+npm install
 npm test
 npm run build
+npm start
 ```
